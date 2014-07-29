@@ -5,6 +5,10 @@ namespace :cities do
   task seed: :environment do
     City.destroy_all
     data = CSV.read('db/ranking.csv')
+
+    # Remove header line
+    data.shift
+    
     data.each do |c|
       City.create(
         original_rank: c[0],
