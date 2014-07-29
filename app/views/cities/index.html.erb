@@ -8,10 +8,10 @@
   </thead>
 
   <tbody>
-    <% @cities.each_with_index do |city,i| %>
+    <% @info.each do |city,info| %>
       <tr>
-        <td><%= @ranks[city] %></td>
-        <td><%= @points[city] %></td>
+        <td><%= info[:rank] %></td>
+        <td><%= info[:points] %></td>
         <td><%= city.name %></td>
         <td><%= link_to 'Show', city %></td>
         <td><%= link_to 'Edit', edit_city_path(city) %></td>

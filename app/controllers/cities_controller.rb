@@ -102,18 +102,29 @@ class CitiesController < ApplicationController
     # walk_to_work
     @cities.sort_by! { |c| c.walk_to_work }.reverse!
     @cities.each_with_index { |c,i| @points[c] += 3 * (1 - i * mult) }
+
+    # bike_to_work
+    @cities.sort_by! { |c| c.bike_to_work }.reverse!
+    @cities.each_with_index { |c,i| @points[c] += 3 * (1 - i * mult) }
+
+    # transit_to_work
+    @cities.sort_by! { |c| c.transit_to_work }.reverse!
+    @cities.each_with_index { |c,i| @points[c] += 5 * (1 - i * mult) }
   end
 
   # GET /cities
   # GET /cities.json
   def index
     @cities = City.all.to_a
-    
+
     default_rank
-    @ranks = {}
+    @info = {}
     i = 1
-    @points.sort_by { |c,p| p }.reverse.each do |c,p|
-      @ranks[c] = i
+    @points.sort_by { |c,r| r }.reverse.each do |c,r|
+      @info[c] = {
+        rank: i,
+        points: @points[c].round(2)
+      }
       i += 1
     end
   end
