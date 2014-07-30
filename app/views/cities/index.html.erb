@@ -10,8 +10,8 @@
   <tbody>
     <% @info.each do |city,info| %>
       <tr>
-        <td><%= info[:rank] %></td>
         <td><%= info[:points] %></td>
+        <td><%= city.income_tax %></td>
         <td><%= city.name %></td>
         <td><%= link_to 'Show', city %></td>
         <td><%= link_to 'Edit', edit_city_path(city) %></td>
