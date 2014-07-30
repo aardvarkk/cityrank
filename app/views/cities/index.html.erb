@@ -3,20 +3,26 @@
 <table>
   <thead>
     <tr>
-      <th colspan="3"></th>
+      <th>Rank</th>
+      <th>Original</th>
+      <th>Points</th>
+      <th>City</th>
     </tr>
   </thead>
 
   <tbody>
+    <% rank = 1 %>
     <% @info.each do |city,info| %>
       <tr>
-        <td><%= info[:points] %></td>
-        <td><%= city.income_tax %></td>
+        <td><%= rank %></td>
+        <td><%= city.original_rank %></td>
+        <td><%= info[:points].round(2) %></td>
         <td><%= city.name %></td>
         <td><%= link_to 'Show', city %></td>
         <td><%= link_to 'Edit', edit_city_path(city) %></td>
         <td><%= link_to 'Destroy', city, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
+      <% rank = rank + 1 %>
     <% end %>
   </tbody>
 </table>

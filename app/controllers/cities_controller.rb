@@ -116,83 +116,138 @@ class CitiesController < ApplicationController
       @info[c][:points] = 0
     end
 
+    # ALTERNATE WAY TO SORT -- doesn't match with original...
+    # @rank_tbl = @cities.map { |c| c.property_tax }.uniq.sort
+    # @cities.each { |c| @info[c][:points] += 2 * (1 - @rank_tbl.index(c.property_tax).fdiv(@rank_tbl.length-1)) }
+
     # walk_to_work
-    # ranks = get_ranks @cities.sort_by! { |c| c.walk_to_work }.reverse!.group_by { |c| c.walk_to_work }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.walk_to_work }.reverse!.group_by { |c| c.walk_to_work }
+    @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
 
     # bike_to_work
-    # ranks = get_ranks @cities.sort_by! { |c| c.bike_to_work }.reverse!.group_by { |c| c.bike_to_work }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.bike_to_work }.reverse!.group_by { |c| c.bike_to_work }
+    @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
 
     # transit_to_work
-    # ranks = get_ranks @cities.sort_by! { |c| c.transit_to_work }.reverse!.group_by { |c| c.transit_to_work }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.transit_to_work }.reverse!.group_by { |c| c.transit_to_work }
+    @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
 
     # rainfall 2
     # Original methodology -- aim for ideal amount of precipitation
-    # ranks = get_ranks @cities.sort_by! { |c| (c.rainfall - 700).abs }.group_by { |c| (c.rainfall - 700).abs }
+    ranks = get_ranks @cities.sort_by! { |c| (c.rainfall - 700).abs }.group_by { |c| (c.rainfall - 700).abs }
     # Alternate methodology -- aim for minimal precipitation
     # @cities.sort_by! { |c| c.rainfall }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 2 * (1 - ranks[i] * mult) }
+    @cities.each_with_index { |c,i| @info[c][:points] += 2 * (1 - ranks[i] * mult) }
 
     # days_with_rain 3
-    # ranks = get_ranks @cities.sort_by! { |c| c.days_with_rain }.group_by { |c| c.days_with_rain }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.days_with_rain }.group_by { |c| c.days_with_rain }
+    @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
 
     # days_with_precip 1
-    # ranks = get_ranks @cities.sort_by! { |c| c.days_with_precip }.group_by { |c| c.days_with_precip }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.days_with_precip }.group_by { |c| c.days_with_precip }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
 
     # days_above_0 3
-    # ranks = get_ranks @cities.sort_by! { |c| c.days_above_0 }.reverse!.group_by { |c| c.days_above_0 }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.days_above_0 }.reverse!.group_by { |c| c.days_above_0 }
+    @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
 
     # days_above_20 1
-    # ranks = get_ranks @cities.sort_by! { |c| c.days_above_20 }.reverse!.group_by { |c| c.days_above_20 }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.days_above_20 }.reverse!.group_by { |c| c.days_above_20 }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
 
     # popgrowth 8
     # Original methodology -- aim for ideal amount of population growth
-    # ranks = get_ranks @cities.sort_by! { |c| (c.popgrowth - 0.082).abs }.group_by { |c| (c.popgrowth - 0.082).abs }
+    ranks = get_ranks @cities.sort_by! { |c| (c.popgrowth - 0.082).abs }.group_by { |c| (c.popgrowth - 0.082).abs }
     # Alternate methodology -- aim for minimal precipitation
     # @cities.sort_by! { |c| c.rainfall }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 8 * (1 - ranks[i] * mult) }
+    @cities.each_with_index { |c,i| @info[c][:points] += 8 * (1 - ranks[i] * mult) }
 
     # unemp_rate 10
-    # ranks = get_ranks @cities.sort_by! { |c| c.unemp_rate }.group_by { |c| c.unemp_rate }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 10 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.unemp_rate }.group_by { |c| c.unemp_rate }
+    @cities.each_with_index { |c,i| @info[c][:points] += 10 * (1 - ranks[i] * mult) }
 
     # avg_house_price 6
-    # ranks = get_ranks @cities.sort_by! { |c| c.avg_house_price }.group_by { |c| c.avg_house_price }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 6 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.avg_house_price }.group_by { |c| c.avg_house_price }
+    @cities.each_with_index { |c,i| @info[c][:points] += 6 * (1 - ranks[i] * mult) }
 
     # avg_years_to_buy_house 6
-    # ranks = get_ranks @cities.sort_by! { |c| c.avg_years_to_buy_house }.group_by { |c| c.avg_years_to_buy_house }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 6 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.avg_years_to_buy_house }.group_by { |c| c.avg_years_to_buy_house }
+    @cities.each_with_index { |c,i| @info[c][:points] += 6 * (1 - ranks[i] * mult) }
 
     # avg_hshld_income 5
-    # ranks = get_ranks @cities.sort_by! { |c| c.avg_hshld_income }.reverse!.group_by { |c| c.avg_hshld_income }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.avg_hshld_income }.reverse!.group_by { |c| c.avg_hshld_income }
+    @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
 
     # avg_disc_income 5
-    # ranks = get_ranks @cities.sort_by! { |c| c.avg_disc_income }.reverse!.group_by { |c| c.avg_disc_income }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.avg_disc_income }.reverse!.group_by { |c| c.avg_disc_income }
+    @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
 
     # avg_hshld_networth 0 (or 5 in the table?!)
-    # ranks = get_ranks @cities.sort_by! { |c| c.avg_hshld_networth }.reverse!.group_by { |c| c.avg_hshld_networth }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.avg_hshld_networth }.reverse!.group_by { |c| c.avg_hshld_networth }
+    @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
 
     # new_cars 1
-    # ranks = get_ranks @cities.sort_by! { |c| c.new_cars }.reverse!.group_by { |c| c.new_cars }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.new_cars }.reverse!.group_by { |c| c.new_cars }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
 
     # new_luxury_cars 1
-    # ranks = get_ranks @cities.sort_by! { |c| c.new_luxury_cars }.reverse!.group_by { |c| c.new_luxury_cars }
-    # @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+    ranks = get_ranks @cities.sort_by! { |c| c.new_luxury_cars }.reverse!.group_by { |c| c.new_luxury_cars }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
 
     # income_tax 3
-    @rank_tbl = @cities.map { |c| c.income_tax }.uniq.sort
-    @cities.each { |c| @info[c][:points] += 3 * (1 - @rank_tbl.index(c.income_tax).fdiv(@rank_tbl.length-1)) }
+    ranks = get_ranks @cities.sort_by! { |c| c.income_tax }.group_by { |c| c.income_tax }
+    @cities.each_with_index { |c,i| @info[c][:points] += 3 * (1 - ranks[i] * mult) }
+
+    # sales_tax 1
+    ranks = get_ranks @cities.sort_by! { |c| c.sales_tax }.group_by { |c| c.sales_tax }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+
+    # property_tax 2
+    ranks = get_ranks @cities.sort_by! { |c| c.property_tax }.group_by { |c| c.property_tax }
+    @cities.each_with_index { |c,i| @info[c][:points] += 2 * (1 - ranks[i] * mult) }
+
+    # prop_tax_as_perc 1
+    ranks = get_ranks @cities.sort_by! { |c| c.prop_tax_as_perc }.group_by { |c| c.prop_tax_as_perc }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+
+    # crime_severity 2
+    ranks = get_ranks @cities.sort_by! { |c| c.crime_severity }.group_by { |c| c.crime_severity }
+    @cities.each_with_index { |c,i| @info[c][:points] += 2 * (1 - ranks[i] * mult) }
+
+    # crime_per_100k 2
+    ranks = get_ranks @cities.sort_by! { |c| c.crime_per_100k }.group_by { |c| c.crime_per_100k }
+    @cities.each_with_index { |c,i| @info[c][:points] += 2 * (1 - ranks[i] * mult) }
+
+    # change_in_crime 1
+    ranks = get_ranks @cities.sort_by! { |c| c.change_in_crime }.group_by { |c| c.change_in_crime }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+
+    # violent_crime_severity 2
+    ranks = get_ranks @cities.sort_by! { |c| c.violent_crime_severity }.group_by { |c| c.violent_crime_severity }
+    @cities.each_with_index { |c,i| @info[c][:points] += 2 * (1 - ranks[i] * mult) }
+
+    # doctors_per_1k 5
+    ranks = get_ranks @cities.sort_by! { |c| c.doctors_per_1k }.reverse!.group_by { |c| c.doctors_per_1k }
+    @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
+
+    # employed_in_health 4
+    ranks = get_ranks @cities.sort_by! { |c| c.employed_in_health }.reverse!.group_by { |c| c.employed_in_health }
+    @cities.each_with_index { |c,i| @info[c][:points] += 4 * (1 - ranks[i] * mult) }
+
+    # medical_offices_per_1k 1
+    ranks = get_ranks @cities.sort_by! { |c| c.medical_offices_per_1k }.reverse!.group_by { |c| c.medical_offices_per_1k }
+    @cities.each_with_index { |c,i| @info[c][:points] += 1 * (1 - ranks[i] * mult) }
+
+    # NO DATA FOR AMENITIES -- would have to fill them in to make rankings work...
+    # hospital 2
+    # college 1
+    # university 1
+    # movie_theatre 0.5
+    # prox_major_airport [1.5, 1, 0.5]
+
+    # employed_in_arts 5
+    ranks = get_ranks @cities.sort_by! { |c| c.employed_in_arts }.reverse!.group_by { |c| c.employed_in_arts }
+    @cities.each_with_index { |c,i| @info[c][:points] += 5 * (1 - ranks[i] * mult) }
 
   end
 
@@ -214,7 +269,9 @@ class CitiesController < ApplicationController
     #   i += 1
     # end
 
+    # Sort so higher is better...
     @info = @info.sort_by { |city, info| info[:points] }.reverse
+
   end
 
   # GET /cities/1
