@@ -1,6 +1,4 @@
-# TODO: TIES!
-# Examine Red Deer, Alta for rainfall
-# It has exact same data as Sylvan Lake but scores lower due to my simplified ranking
+require 'pry'
 
 # http://www.moneysense.ca/property/canadas-best-places-to-live-2014-methodology
 
@@ -157,7 +155,7 @@ class CitiesController < ApplicationController
 
     # popgrowth 8
     # Original methodology -- aim for ideal amount of population growth
-    ranks = get_ranks @cities.sort_by! { |c| (c.popgrowth - 0.082).abs }.group_by { |c| (c.popgrowth - 0.082).abs }
+    ranks = get_ranks @cities.sort_by! { |c| (c.popgrowth - 8.2).abs }.group_by { |c| (c.popgrowth - 8.2).abs }
     # Alternate methodology -- aim for minimal precipitation
     # @cities.sort_by! { |c| c.rainfall }
     @cities.each_with_index { |c,i| @info[c][:points] += 8 * (1 - ranks[i] * mult) }
@@ -257,6 +255,11 @@ class CitiesController < ApplicationController
     @cities = City.all.to_a
 
     @info = {}
+
+    if params['commit'] == "Compare"
+      @c0 = City.where(id: params['c0']).first
+      @c1 = City.where(id: params['c1']).first
+    end
 
     default_rank
 

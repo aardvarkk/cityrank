@@ -1,3 +1,35 @@
+<% sorted_cities = @cities.sort_by { |c| c.name } %>
+<%= form_tag "/cities", method: "get" do %>
+  <%= label_tag "Compare" %>
+  <%= collection_select nil, :c0, sorted_cities, :id, :name, selected: @c0.id %>
+  <%= collection_select nil, :c1, sorted_cities, :id, :name, selected: @c1.id %>
+  <%= submit_tag("Compare") %>
+<% end %>
+
+<% if @c0 && @c1 %>
+<h1>Comparison</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Attribute</th>
+      <th><%= @c0[:name] %></th>
+      <th><%= @c1[:name] %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% City::CATEGORIES.each do |sym,str| %>
+      <tr>
+        <td><%= str %></td>
+        <td><%= @c0[sym] %></td>
+        <td><%= @c1[sym] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+
+</table>
+<% end %>
+
 <h1>Listing cities</h1>
 
 <table>

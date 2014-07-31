@@ -8,13 +8,13 @@ namespace :cities do
 
     # Remove header line
     data.shift
-    
+
     data.each do |c|
       City.create(
         original_rank: c[0],
         name: c[1],
         population: c[2],
-        popgrowth: c[3],
+        popgrowth: c[3].to_f * 100, # Since percent is right in the data, we have to scale back up
         unemp_rate: c[4],
         avg_hshld_income: c[5],
         avg_disc_income: c[6],
